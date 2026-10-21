@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Spot an AI-Made Website</title>
+  <meta name="description" content="A short field guide to recognizing websites built with AI.">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --radius: 14px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f0f17;
+        --surface: #181824;
+        --text: #f3f4f6;
+        --muted: #9ca3af;
+        --border: #2a2a3a;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { width: min(1100px, 100% - 32px); margin-inline: auto; }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+    .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 110px 0 90px;
+      background:
+        radial-gradient(600px 300px at 20% 0%, rgba(99, 102, 241, 0.18), transparent),
+        radial-gradient(600px 300px at 80% 10%, rgba(236, 72, 153, 0.14), transparent);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.3rem, 6vw, 3.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 span {
+      background: linear-gradient(90deg, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p { color: var(--muted); font-size: 1.15rem; max-width: 580px; margin: 0 auto 32px; }
+
+    .btn {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+    /* Sections */
+    section { padding: 72px 0; }
+    h2 { font-size: 1.9rem; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .section-sub { color: var(--muted); margin-bottom: 40px; max-width: 620px; }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.12);
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+    .card h3 { margin-bottom: 8px; font-size: 1.1rem; }
+    .card p { color: var(--muted); font-size: 0.95rem; }
+    .card .tip {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .card .tip strong { color: var(--accent); }
+
+    /* Checklist */
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px 28px;
+      max-width: 720px;
+    }
+    .check {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .check:last-of-type { border-bottom: none; }
+    .check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+    .check span { font-size: 0.98rem; }
+
+    .score {
+      margin-top: 24px;
+      max-width: 720px;
+      padding: 20px 28px;
+      border-radius: var(--radius);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    .score strong { font-size: 1.15rem; }
+    .bar {
+      height: 8px;
+      border-radius: 99px;
+      background: var(--border);
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .bar div {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #6366f1, #ec4899);
+      transition: width 0.3s;
+    }
+
+    /* Caveat */
+    .caveat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      max-width: 720px;
+    }
+    .caveat p { color: var(--muted); }
+    .caveat p + p { margin-top: 10px; }
+
+    /* Reveal */
+    .reveal-section { text-align: center; padding: 90px 0 110px; }
+    .reveal-wrap { min-height: 230px; }
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+    }
+    .reveal-text.show { opacity: 1; transform: none; height: auto; pointer-events: auto; }
+    .reveal-text h2 { font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 14px; }
+    .reveal-text h2 span {
+      background: linear-gradient(90deg, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .reveal-text p { color: var(--muted); max-width: 560px; margin: 0 auto 8px; }
+    .hidden { display: none; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { gap: 14px; }
+      .hero { padding: 70px 0 60px; }
+      .checklist { padding: 6px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <div class="logo">AI Spotter</div>
+      <div class="nav-links">
+        <a href="#signs">The signs</a>
+        <a href="#checklist">Checklist</a>
+        <a href="#caveat">Caveat</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">A short field guide</span>
+      <h1>How to spot an <span>AI-made</span> website</h1>
+      <p>Six telltale signs that a site was generated rather than hand-crafted. Learn them, then test yourself.</p>
+      <a href="#signs" class="btn">Start the guide</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="signs">
+      <div class="container">
+        <h2>The telltale signs</h2>
+        <p class="section-sub">None of these prove anything alone. Together, they paint a picture.</p>
+
+        <div class="cards">
+          <div class="card">
+            <h3>1. The purple-to-pink gradient</h3>
+            <p>Indigo, violet and pink gradients on headlines, buttons and glowing backgrounds are a very common default look.</p>
+            <p class="tip"><strong>Look for:</strong> gradient text on the main headline.</p>
+          </div>
+
+          <div class="card">
+            <h3>2. Three cards, three emojis</h3>
+            <p>A row of three identical feature cards, each topped with an emoji or a simple icon in a rounded square.</p>
+            <p class="tip"><strong>Look for:</strong> "Fast", "Secure", "Responsive" as the three titles.</p>
+          </div>
+
+          <div class="card">
+            <h3>3. Vague, polished copy</h3>
+            <p>Headlines like "Build something beautiful" or "Elevate your workflow" sound nice but say very little about what the product actually does.</p>
+            <p class="tip"><strong>Look for:</strong> big promises, no specifics.</p>
+          </div>
+
+          <div class="card">
+            <h3>4. Pill buttons and soft everything</h3>
+            <p>Fully rounded buttons, rounded cards, soft shadows and a button that lifts slightly on hover.</p>
+            <p class="tip"><strong>Look for:</strong> no sharp corners anywhere.</p>
+          </div>
+
+          <div class="card">
+            <h3>5. Perfectly symmetric layout</h3>
+            <p>Centered hero, evenly spaced sections, matching card heights. Human designers usually break the grid somewhere on purpose.</p>
+            <p class="tip"><strong>Look for:</strong> zero personality quirks.</p>
+          </div>
+
+          <div class="card">
+            <h3>6. Generic placeholders</h3>
+            <p>Names like "John Doe", fake testimonials, "Acme Inc.", stock-looking images or "Your text here" left in the page.</p>
+            <p class="tip"><strong>Look for:</strong> content that could belong to any company.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <div class="container">
+        <h2>Test a website</h2>
+        <p class="section-sub">Open any site in another tab, then tick every sign you can spot.</p>
+
+        <div class="checklist" id="checklist-box">
+          <label class="check"><input type="checkbox"><span>The main headline uses a colorful gradient.</span></label>
+          <label class="check"><input type="checkbox"><span>There is a row of three feature cards with emojis or similar icons.</span></label>
+          <label class="check"><input type="checkbox"><span>The copy is polished but vague about what is really offered.</span></label>
+          <label class="check"><input type="checkbox"><span>Buttons are fully rounded pills with a hover lift effect.</span></label>
+          <label class="check"><input type="checkbox"><span>The layout is perfectly centered and symmetric.</span></label>
+          <label class="check"><input type="checkbox"><span>There are generic placeholder names, texts or images.</span></label>
+        </div>
+
+        <div class="score" id="score">
+          <strong id="score-text">0 / 6 signs spotted</strong>
+          <div id="score-label" style="color: var(--muted); font-size: 0.95rem;">Tick the boxes as you go.</div>
+          <div class="bar"><div id="bar"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="caveat">
+      <div class="container">
+        <h2>A fair warning</h2>
+        <p class="section-sub">Spotting AI is not an exact science.</p>
+        <div class="caveat">
+          <p>Plenty of human designers use gradients, rounded corners and three-column layouts too. AI tools learned those patterns from real websites, after all.</p>
+          <p>And a skilled person can prompt, edit and polish an AI-built site until it looks completely unique. Treat this list as clues, not proof.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal-section">
+      <div class="container">
+        <div class="reveal-wrap">
+          <div id="prompt">
+            <h2>One last thing...</h2>
+            <p class="section-sub" style="margin: 0 auto 28px;">Before you leave, have a good look at the page you just read.</p>
+            <button class="btn" id="reveal-btn">Reveal the twist</button>
+          </div>
+
+          <div class="reveal-text" id="reveal">
+            <h2>Oh, and I made this website <span>without Claude, but,it is made to look like it was.</span></h2>
+            <p>Gradient headline, three-card grid, pill buttons, centered layout. How many signs did you count?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">&copy; 2026 AI Spotter. Built with(out) Claude.</div>
+  </footer>
+
+  <script>
+    // Checklist scoring
+    const boxes = document.querySelectorAll('#checklist-box input');
+    const scoreText = document.getElementById('score-text');
+    const scoreLabel = document.getElementById('score-label');
+    const bar = document.getElementById('bar');
+
+    function updateScore() {
+      const count = [...boxes].filter(b => b.checked).length;
+      scoreText.textContent = count + ' / ' + boxes.length + ' signs spotted';
+      bar.style.width = (count / boxes.length * 100) + '%';
+
+      if (count === 0) scoreLabel.textContent = 'Tick the boxes as you go.';
+      else if (count <= 2) scoreLabel.textContent = 'Probably human-made, or well disguised.';
+      else if (count <= 4) scoreLabel.textContent = 'Suspicious. AI may have helped here.';
+      else scoreLabel.textContent = 'Very likely AI-generated, or at least AI-styled.';
+    }
+    boxes.forEach(b => b.addEventListener('change', updateScore));
+
+    // Final reveal
+    document.getElementById('reveal-btn').addEventListener('click', () => {
+      document.getElementById('prompt').classList.add('hidden');
+      document.getElementById('reveal').classList.add('show');
+    });
+  </script>
+</body>
+</html>
